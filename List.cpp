@@ -55,62 +55,89 @@ void AssignList(Node*& list)
     }
 }
 
-void add_after(Node*& list, char a_word[], char word_after[])
+void addAfter(Node* list, std::string a_word, std::string word_after)
 {
-    // преобразование массива char к строкам
-    std::string word(a_word);
-    std::string word2(word_after);
-    
-    //создаём новую переменную для list иначе список исчезнет
-    Node* a_list = list;
+ 
+
     // пока не закончился список или 
     //пока не нашли элемент после которого нужно добавить элемент
-    while (a_list && a_list->data != word)
+    while (list && list->data != a_word)
     {
         // идем по списку сворачивая его
-        a_list = a_list->ptr;
+        list = list->ptr;
     }
     // если элемент найден
-    if (a_list)
+    if (list)
     {
         // запоминаем значение следуещего элемента
-        Node* buf = a_list->ptr;
+        Node* buf = list->ptr;
         // вставляем пустой элемент
-        a_list->ptr = new Node;
+        list->ptr = new Node;
         // заполняем его
-        a_list->ptr->data = word2;
+        list->ptr->data = word_after;
         // делаем связь с последующим элементом
-        a_list->ptr->ptr = buf;
-    }
-    
-}
-
-void delete_after(Node*& list, char a_word[])
-{
-    
-    std::string word(a_word);
-    Node* a_list = list;
-    while (a_list->ptr && a_list->ptr->data != word)
-    {
-        a_list = a_list->ptr;
-    }
-    if (a_list->ptr)
-    {
-
-        Node* del = a_list->ptr;
-        a_list->ptr = a_list->ptr->ptr;
-        delete del;
+        list->ptr->ptr = buf;
     }
 
 }
 
-void print_list(Node* list) 
+
+void deleteAfter(Node* list, std::string a_word)
 {
+    if (list)
+    {
+        while (list->ptr && list->ptr->data != a_word)
+        {
+            list = list->ptr;
+        }
+        if (list->ptr)
+        {
+
+            Node* del = list->ptr;
+            list->ptr = list->ptr->ptr;
+            delete del;
+        }
+    }
+        
+}
+
+void MinBegin(Node* list)
+{
+        Node* a_list = list;
+        std::string min = list->data;
+        Node* minIndex = list;
+            while (a_list)
+            {
+                if (a_list->data < min)
+                {
+                    min = a_list->data;
+                    minIndex = a_list;
+                }
+                a_list = a_list->ptr;
+            }
+            minIndex->data = list->data;
+            list->data = min;
+}
+
+void Sort(Node* list)
+{
+    while (list)
+    {
+        MinBegin(list);
+        list = list->ptr;
+    }
+}
+
+
+void printList(Node* list) 
+{
+    std::cout << "\nТЕКУЩЕЕ СОДЕРЖИМОЕ СПИСКА:\n";
     while (list) 
     {
         std::cout << list->data << " ";
         list = list->ptr;
     }
+    std::cout << '\n';
 }
 
 int main()
@@ -120,19 +147,27 @@ int main()
     SetConsoleOutputCP(1251);
 #endif
     Node* list = nullptr;
-    
+    std::string a_word;
+    std::string word_after;
+    std::string deleteWord;
     AssignList(list);
-    std::cout << "\nТЕКУЩЕЕ СОДЕРЖИМОЕ СПИСКА:\n";
-//    print_list(list);
-    std::cout << '\n';
-    char a_word[]{'h', 'e', 'c', '\0'};
-    char word_after[]{'t', 'e', 'r', '\0'};
-    add_after(list, a_word, word_after);
-    print_list(list);
-    std::cout << '\n';
-    delete_after(list, word_after);
-    print_list(list);
-    std::cout << "Hello World!\n";
+    
+    printList(list);
+    
+    std::cout << "ПОСЛЕ КАКОГО СЛОВА ВЫ ХОТИТЕ ВСТАВИТЬ НОВОЕ СЛОВО ? ";
+    std::cin >> a_word;
+    std::cout << "КАКОЕ СЛОВО ВЫ ХОТИТЕ ВСТАВИТЬ? ";
+    std::cin >> word_after;
+    addAfter(list, a_word, word_after);
+    printList(list);
+    std::cout << "КАКОЕ СЛОВО ВЫ ХОТИТЕ УДАЛИТЬ ?";
+    std::cin >> deleteWord;
+    deleteAfter(list, deleteWord);
+    printList(list);
+    Sort(list);
+    std::cout << "СОДЕРЖИМОЕ СПИСКА ПОСЛЕ СОРТИРОВКИ : \n";
+    printList(list);
+    return 0;
 }
 
 // Запуск программы: CTRL+F5 или меню "Отладка" > "Запуск без отладки"
