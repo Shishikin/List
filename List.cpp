@@ -55,13 +55,13 @@ void AssignList(Node*& list)
     }
 }
 
-void addAfter(Node* list, std::string a_word, std::string word_after)
+void addAfter(Node* list, std::string word, std::string wordAfter)
 {
  
 
     // пока не закончился список или 
     //пока не нашли элемент после которого нужно добавить элемент
-    while (list && list->data != a_word)
+    while (list && list->data != word)
     {
         // идем по списку сворачивая его
         list = list->ptr;
@@ -74,7 +74,7 @@ void addAfter(Node* list, std::string a_word, std::string word_after)
         // вставляем пустой элемент
         list->ptr = new Node;
         // заполняем его
-        list->ptr->data = word_after;
+        list->ptr->data = wordAfter;
         // делаем связь с последующим элементом
         list->ptr->ptr = buf;
     }
@@ -82,11 +82,11 @@ void addAfter(Node* list, std::string a_word, std::string word_after)
 }
 
 
-void deleteAfter(Node* list, std::string a_word)
+void deleteAfter(Node* list, std::string word)
 {
     if (list)
     {
-        while (list->ptr && list->ptr->data != a_word)
+        while (list->ptr && list->ptr->data != word)
         {
             list = list->ptr;
         }
@@ -147,18 +147,18 @@ int main()
     SetConsoleOutputCP(1251);
 #endif
     Node* list = nullptr;
-    std::string a_word;
-    std::string word_after;
+    std::string word;
+    std::string wordAfter;
     std::string deleteWord;
     AssignList(list);
     
     printList(list);
     
     std::cout << "ПОСЛЕ КАКОГО СЛОВА ВЫ ХОТИТЕ ВСТАВИТЬ НОВОЕ СЛОВО ? ";
-    std::cin >> a_word;
+    std::cin >> word;
     std::cout << "КАКОЕ СЛОВО ВЫ ХОТИТЕ ВСТАВИТЬ? ";
-    std::cin >> word_after;
-    addAfter(list, a_word, word_after);
+    std::cin >> wordAfter;
+    addAfter(list, word, wordAfter);
     printList(list);
     std::cout << "КАКОЕ СЛОВО ВЫ ХОТИТЕ УДАЛИТЬ ?";
     std::cin >> deleteWord;
