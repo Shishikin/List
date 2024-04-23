@@ -1,2 +1,3 @@
 ﻿  List.cpp
+C:\visial studio\Askon\List\List.cpp(201,5): warning C4267: инициализация: преобразование из "size_t" в "int"; возможна потеря данных
   List.vcxproj -> C:\visial studio\Askon\List\x64\Debug\List.exe

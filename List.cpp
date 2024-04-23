@@ -3,6 +3,7 @@
 
 #include <iostream>
 #include <string>
+#include <vector>
 
 #ifdef _WIN32
 #include <windows.h>
@@ -55,7 +56,7 @@ void AssignList(Node*& list)
     }
 }
 
-void addAfter(Node* list, std::string word, std::string wordAfter)
+void AddAfter(Node* list, std::string word, std::string wordAfter)
 {
  
 
@@ -82,25 +83,38 @@ void addAfter(Node* list, std::string word, std::string wordAfter)
 }
 
 
-void deleteAfter(Node* list, std::string word)
+void DeleteAfter(Node*& a_list, std::string word)
 {
+    Node* list = a_list;
     if (list)
     {
-        while (list->ptr && list->ptr->data != word)
+        if (list->data == word)
         {
-            list = list->ptr;
+            a_list = list->ptr;
+            delete list;
+            list = nullptr;
         }
-        if (list->ptr)
+        else
         {
+            while (list->ptr && list->ptr->data != word)
+            {
+                list = list->ptr;
+            }
+            if (list->ptr)
+            {
 
-            Node* del = list->ptr;
-            list->ptr = list->ptr->ptr;
-            delete del;
+                Node* del = list->ptr;
+                list->ptr = list->ptr->ptr;
+                delete del;
+                del = nullptr;
+            }
         }
+        
     }
         
 }
 
+// функция не безопасно можно использоввать только, если известно, что указатель не NULL
 void MinBegin(Node* list)
 {
         Node* a_list = list;
@@ -129,7 +143,18 @@ void Sort(Node* list)
 }
 
 
-void printList(Node* list) 
+void Swap(Node* a, Node* b)
+{
+    Node* f = new Node;
+    f->data = a->data;
+    a->data = b->data;
+    b->data = f->data;
+    delete f;
+    f = nullptr;
+}
+
+
+void PrintList(Node* list) 
 {
     std::cout << "\nТЕКУЩЕЕ СОДЕРЖИМОЕ СПИСКА:\n";
     while (list) 
@@ -140,33 +165,110 @@ void printList(Node* list)
     std::cout << '\n';
 }
 
+void PrintListForwards(Node* list)
+{
+    if (list)
+    {
+        std::cout << list->data << ' ';
+        PrintListForwards(list->ptr);
+    }
+    else
+    {
+        std::cout << '\n';
+    }
+}
+
+
+void PrintListBackwards(Node* list)
+{
+    if (list)
+    {
+        PrintListBackwards(list->ptr);
+        std::cout << list->data << ' ';
+    }
+}
+
+
+void PrintListBackwardsIteration(Node* list)
+{
+
+    std::vector<std::string> temporaryData;
+    while (list)
+    {
+        temporaryData.push_back(list->data);
+        list = list->ptr;
+    }
+    for (int i = temporaryData.size() - 1; i >= 0; i--)
+    {
+        std::cout << temporaryData[i] << ' ';
+    }
+}
+
+void DeleteList(Node*& a_list)
+{
+    
+    while (a_list)
+    {
+        Node* list = a_list;
+        a_list = a_list->ptr;
+        delete list;
+        list = nullptr;
+    }
+}
+
 int main()
 {
 #ifdef _WIN32
     SetConsoleCP(1251);
     SetConsoleOutputCP(1251);
 #endif
+    
     Node* list = nullptr;
     std::string word;
     std::string wordAfter;
     std::string deleteWord;
     AssignList(list);
     
-    printList(list);
+    PrintList(list);
     
+    /*
     std::cout << "ПОСЛЕ КАКОГО СЛОВА ВЫ ХОТИТЕ ВСТАВИТЬ НОВОЕ СЛОВО ? ";
     std::cin >> word;
     std::cout << "КАКОЕ СЛОВО ВЫ ХОТИТЕ ВСТАВИТЬ? ";
     std::cin >> wordAfter;
-    addAfter(list, word, wordAfter);
-    printList(list);
+    AddAfter(list, word, wordAfter);
+    PrintList(list);
     std::cout << "КАКОЕ СЛОВО ВЫ ХОТИТЕ УДАЛИТЬ ?";
     std::cin >> deleteWord;
-    deleteAfter(list, deleteWord);
-    printList(list);
+    DeleteAfter(list, deleteWord);
+    PrintList(list);
     Sort(list);
     std::cout << "СОДЕРЖИМОЕ СПИСКА ПОСЛЕ СОРТИРОВКИ : \n";
-    printList(list);
+    PrintList(list);
+    */
+
+    
+    std::cout << "Вывод прямой порядок рекурсия\n";
+    PrintListForwards(list);
+    std::cout << "Вывод обратный порядок рекурсия\n";
+    PrintListBackwards(list);
+    std::cout << '\n';
+    std::cout << "Вывод обратный порядок цикл\n";
+    PrintListBackwardsIteration(list);
+    DeleteList(list);
+    PrintList(list);
+    
+
+
+    /*
+    Node* a;
+    Node* b;
+    AssignList(a);
+    AssignList(b);
+    Swap(a, b);
+    DeleteList(a);
+    DeleteList(b);
+    */
     return 0;
 }
 
